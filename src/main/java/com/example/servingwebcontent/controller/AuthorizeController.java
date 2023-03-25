@@ -1,8 +1,8 @@
 package com.example.servingwebcontent.controller;
-
 import com.example.servingwebcontent.dto.AccessTokenDTO;
 import com.example.servingwebcontent.dto.GithubUser;
 import com.example.servingwebcontent.provider.GithubProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +23,8 @@ public class AuthorizeController {
 
     @GetMapping("/callback")
     public String callback( @RequestParam(name = "code") String code,
-                            @RequestParam(name = "state") String state){
+                            @RequestParam(name = "state") String state,
+                            HttpServletRequest request){
 
 
 
@@ -37,14 +38,13 @@ public class AuthorizeController {
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser user = githubProvider.getUser(accessToken);
         if (user != null) {
-            String name = user.getName();
-            System.out.println("name = " + name);
-            // ...
-        }else {
-            System.out.println("user 是 null 值");
+            // 登录成功，写cookie 和session
+            request.getSession().setAttribute("user", user);
+            return "redirect:/";
+        } else {
+            // 登录失败，重新登录
+            return "redirect:/";
         }
-
-        return "index";
     }
 
 }
