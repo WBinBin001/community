@@ -1,6 +1,7 @@
 package com.example.servingwebcontent.controller;
 
 
+import com.example.servingwebcontent.dto.PaginationDTO;
 import com.example.servingwebcontent.dto.QuestionDTO;
 import com.example.servingwebcontent.mapper.UserMapper;
 import com.example.servingwebcontent.model.User;
@@ -24,7 +25,10 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(HttpServletRequest request,
-                        Model model) {
+                        Model model,
+                        @RequestParam(name = "page", defaultValue = "1") Integer page,
+                        @RequestParam(name = "size", defaultValue = "5") Integer size
+    ) {
        Cookie[] cookies = request.getCookies();
 
         if (cookies != null && cookies.length != 0){
@@ -40,9 +44,9 @@ public class IndexController {
                 }
             }
         }
-        List<QuestionDTO> questionList = questionService.list();
-        model.addAttribute("questions", questionList);
 
+        PaginationDTO pagination = (PaginationDTO) questionService.list(page, size);
+        model.addAttribute("pagination", pagination);
        return "index";
     }
 
