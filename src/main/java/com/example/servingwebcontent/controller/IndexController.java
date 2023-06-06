@@ -2,9 +2,6 @@ package com.example.servingwebcontent.controller;
 
 
 import com.example.servingwebcontent.dto.PaginationDTO;
-import com.example.servingwebcontent.dto.QuestionDTO;
-import com.example.servingwebcontent.mapper.UserMapper;
-import com.example.servingwebcontent.model.User;
 import com.example.servingwebcontent.QuestionService.QuestionService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,32 +15,13 @@ import java.util.List;
 @Controller
 public class IndexController {
     @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
     private QuestionService questionService;
 
     @GetMapping("/")
-    public String index(HttpServletRequest request,
-                        Model model,
+    public String index(Model model,
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
                         @RequestParam(name = "size", defaultValue = "5") Integer size
     ) {
-       Cookie[] cookies = request.getCookies();
-
-        if (cookies != null && cookies.length != 0){
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    User user = userMapper.findByToken(token);
-
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                    break;
-                }
-            }
-        }
 
         PaginationDTO pagination = (PaginationDTO) questionService.list(page, size);
         model.addAttribute("pagination", pagination);
