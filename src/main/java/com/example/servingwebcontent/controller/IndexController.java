@@ -2,15 +2,12 @@ package com.example.servingwebcontent.controller;
 
 
 import com.example.servingwebcontent.dto.PaginationDTO;
-import com.example.servingwebcontent.QuestionService.QuestionService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
+import com.example.servingwebcontent.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import java.util.List;
 
 @Controller
 public class IndexController {

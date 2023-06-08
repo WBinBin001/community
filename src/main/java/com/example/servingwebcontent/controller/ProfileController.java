@@ -2,7 +2,7 @@ package com.example.servingwebcontent.controller;
 
 import com.example.servingwebcontent.dto.PaginationDTO;
 import com.example.servingwebcontent.model.User;
-import com.example.servingwebcontent.QuestionService.QuestionService;
+import com.example.servingwebcontent.service.QuestionService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

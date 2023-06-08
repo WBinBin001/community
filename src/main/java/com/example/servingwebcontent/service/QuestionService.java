@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.QuestionService;
+package com.example.servingwebcontent.service;
 
 import com.example.servingwebcontent.dto.PaginationDTO;
 import com.example.servingwebcontent.dto.QuestionDTO;

@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.controller;
 
 import com.example.servingwebcontent.dto.QuestionDTO;
-import com.example.servingwebcontent.QuestionService.QuestionService;
+import com.example.servingwebcontent.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
