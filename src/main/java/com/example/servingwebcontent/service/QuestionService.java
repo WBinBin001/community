@@ -5,9 +5,11 @@ import com.example.servingwebcontent.exception.CustomizeException;
 import com.example.servingwebcontent.dto.PaginationDTO;
 import com.example.servingwebcontent.dto.QuestionDTO;
 import com.example.servingwebcontent.mapper.QuestionMapper;
+import com.example.servingwebcontent.mapper.QuestionExtMapper;
 import com.example.servingwebcontent.mapper.UserMapper;
 import com.example.servingwebcontent.model.Question;
 import com.example.servingwebcontent.model.QuestionExample;
+
 import com.example.servingwebcontent.model.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class QuestionService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     public PaginationDTO list(Integer page, Integer size) {
 
@@ -142,6 +147,13 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 
 }
