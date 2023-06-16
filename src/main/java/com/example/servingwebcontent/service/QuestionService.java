@@ -1,5 +1,7 @@
 package com.example.servingwebcontent.service;
 
+import com.example.servingwebcontent.exception.CustomizeErrorCode;
+import com.example.servingwebcontent.exception.CustomizeException;
 import com.example.servingwebcontent.dto.PaginationDTO;
 import com.example.servingwebcontent.dto.QuestionDTO;
 import com.example.servingwebcontent.mapper.QuestionMapper;
@@ -109,6 +111,9 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);
         User user = userMapper.selectByPrimaryKey(question.getCreator());
@@ -124,8 +129,18 @@ public class QuestionService {
             questionMapper.insert(question);
         } else {
             // 更新
-            question.setGmtModified(question.getGmtCreate());
-            questionMapper.insert(question);
+            Question updateQuestion = new Question();
+            updateQuestion.setGmtModified(System.currentTimeMillis());
+            updateQuestion.setTitle(question.getTitle());
+            updateQuestion.setDescription(question.getDescription());
+            updateQuestion.setTag(question.getTag());
+            QuestionExample example = new QuestionExample();
+            example.createCriteria()
+                    .andIdEqualTo(question.getId());
+            int updated = questionMapper.updateByExampleSelective(updateQuestion, example);
+            if (updated != 1) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
     }
 
