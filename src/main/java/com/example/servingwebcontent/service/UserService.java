@@ -3,6 +3,7 @@ package com.example.servingwebcontent.service;
 import com.example.servingwebcontent.mapper.UserMapper;
 import com.example.servingwebcontent.model.User;
 import com.example.servingwebcontent.model.UserExample;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -22,6 +23,7 @@ public class UserService {
             // 插入
             user.setGmtCreat(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreat());
+
             userMapper.insert(user);
         } else {
             //更新

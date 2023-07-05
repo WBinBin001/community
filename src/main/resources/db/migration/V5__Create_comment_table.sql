@@ -1,6 +1,6 @@
 CREATE TABLE comment
 (
-    id int AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     parent_id BIGINT NOT NULL,
     type INT NOT NULL,
     commentator INT NOT NULL,
