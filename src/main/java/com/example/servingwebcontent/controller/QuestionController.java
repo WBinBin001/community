@@ -4,6 +4,7 @@ import com.example.servingwebcontent.dto.QuestionDTO;
 import com.example.servingwebcontent.service.QuestionService;
 import com.example.servingwebcontent.dto.CommentDTO;
 import com.example.servingwebcontent.service.CommentService;
+import com.example.servingwebcontent.enums.CommentTypeEnum;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,7 @@ public class QuestionController {
 
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") Long id, Model model) {
-        List<CommentDTO> comments = commentService.listByQuestionId(id);
+        List<CommentDTO> comments = commentService.listByTargetId(id, CommentTypeEnum.QUESTION);
 
         QuestionDTO questionDTO = questionService.getById(id);
         questionService.incView(id);

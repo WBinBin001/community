@@ -1,6 +1,9 @@
 package com.example.servingwebcontent.controller;
 
 import com.example.servingwebcontent.dto.CommentCreateDTO;
+import com.example.servingwebcontent.dto.CommentDTO;
+import com.example.servingwebcontent.enums.CommentTypeEnum;
+
 import com.example.servingwebcontent.model.Comment;
 import com.example.servingwebcontent.mapper.CommentMapper;
 import com.example.servingwebcontent.service.CommentService;
@@ -11,10 +14,10 @@ import com.example.servingwebcontent.exception.CustomizeErrorCode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -35,6 +38,11 @@ public class CommentController {
         if (user == null) {
             return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
         }
+
+        if (commentCreateDTO == null || StringUtils.isBlank(commentCreateDTO.getContent())) {
+            return ResultDTO.errorOf(CustomizeErrorCode.CONTENT_IS_EMPTY);
+        }
+
         Comment comment = new Comment();
         comment.setParentId(commentCreateDTO.getParentId());
         comment.setContent(commentCreateDTO.getContent());
@@ -47,5 +55,13 @@ public class CommentController {
         return ResultDTO.okOf();
 
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/comment/{id}", method = RequestMethod.GET)
+    public ResultDTO<List<CommentDTO>> comments(@PathVariable(name = "id") Long id) {
+        List<CommentDTO> commentDTOS = commentService.listByTargetId(id, CommentTypeEnum.COMMENT);
+        return ResultDTO.okOf(commentDTOS);
+    }
+
 }
 
