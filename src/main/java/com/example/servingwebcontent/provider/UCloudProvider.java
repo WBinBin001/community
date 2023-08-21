@@ -1,5 +1,7 @@
 package com.example.servingwebcontent.provider;
 
+import com.example.servingwebcontent.exception.CustomizeErrorCode;
+import com.example.servingwebcontent.exception.CustomizeException;
 import com.google.gson.Gson;
 import com.qingstor.sdk.config.*;
 import com.qingstor.sdk.service.Bucket;
@@ -21,6 +23,9 @@ public class UCloudProvider {
     private String publicKey;
     @Value("${ucloud.ufile.private-key}")
     private String privateKey;
+    @Value("${ucloud.ufile.expires}")
+    private Integer expires;
+
     private QingStor stor;
     private Bucket bucket;
 
@@ -58,6 +63,7 @@ public class UCloudProvider {
         } else {
             System.out.println(output.getCode());
             System.out.println(output.getMessage());
+            throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         }
         System.out.println(output.getRequestId());
     }
@@ -77,11 +83,11 @@ public class UCloudProvider {
             Bucket.PutObjectOutput output = bucket.putObject(filekey, input);
             handleOutput(output);
 
-            long expiresTime = new Date().getTime() / 1000 + 60 * 10; // 600秒（10分钟）后过期
+            long expiresTime = new Date().getTime() / 1000 + expires;
             fileUrl = bucket.GetObjectSignatureUrl(filekey, expiresTime);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         }
         return fileUrl;
     }
